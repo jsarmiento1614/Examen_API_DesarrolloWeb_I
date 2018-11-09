@@ -21,18 +21,16 @@ El administrador puede crear nuevos estudiantes, la información que se espera e
 **Estudiante**
 ```
 > student_ID
-> administrator_ID
 > code
 > student_name
-> picture
+> student_picture
 
 ```
 **Maestros**
 ```
 teacher_ID
-administrator_ID
 techer_Name
-Profesion
+profesion
 ```
 
 
@@ -40,8 +38,8 @@ Profesion
 ```
  assistance_ID
  class_ID
- date
- record
+ assistance_date
+ assistance_checked
 
 ```
 
@@ -68,19 +66,20 @@ URL-Entidad-Relacion:
 ## || Convensión de Nombres ||
 
 **GET**
-* /app/v1/student/view/class  *(ver las clases a las que se encuentran matriculados.)
-* /app/v1/teacher/view/class  *(ver las clases a las que se encuentran matriculados.)
+* /app/v1/student/class  *(ver las clases a las que se encuentran matriculados.)
+* /app/v1/teacher/class  *(ver las clases a las que se encuentran matriculados.)
 * /app/v1/student  *(Los Maestros pueden ver los alumnos que están matriculados)
 
 **POST**
 * /app/v1/record/student *(Los Maestros pueden marcar asistencia de un alumnos a una clase en particular)
+
 * /app/v1/student/new *(El administrador puede crear nuevos estudiantes)
 ---
 
-Conecion de la base de datos
 DB_SERVER=localhost
 DB_USER=sa
 DB_PASS=Admin123
-DB_DATABASE=Assistance
+DB_DATABASE=DB_Assistance
 DB_PORT=1433
 APP_PORT=8090
+DB_INSTANCE_NAME=SQLEXPRESS
