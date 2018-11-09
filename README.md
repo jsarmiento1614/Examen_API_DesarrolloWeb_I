@@ -76,3 +76,11 @@ URL-Entidad-Relacion:
 * /app/v1/record/student *(Los Maestros pueden marcar asistencia de un alumnos a una clase en particular)
 * /app/v1/student/new *(El administrador puede crear nuevos estudiantes)
 ---
+
+Conecion de la base de datos
+DB_SERVER=localhost
+DB_USER=sa
+DB_PASS=Admin123
+DB_DATABASE=Assistance
+DB_PORT=1433
+APP_PORT=8090
