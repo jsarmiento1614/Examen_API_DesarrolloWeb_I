@@ -72,8 +72,8 @@ app.get('/app/v1/student/class', (req, res, next) =>{
 
     // Ejecuto la consulta a la base de datos
     sql.connect(sqlconfig).then(() => {
-        return sql.query(`select * from dbo.Clases c
-        INNER JOIN dbo.enrollment e
+        return sql.query(`select c.class_Name, s.student_Name from dbo.Class c
+        INNER JOIN dbo.Enrollment e
         ON  c.class_ID =  e.class_ID 
         INNER JOIN dbo.Student s
         ON  e.student_ID =  s.student_ID 
@@ -101,8 +101,8 @@ app.get('/app/v1/teacher/class', (req, res, next) =>{
 
     // Ejecuto la consulta a la base de datos
     sql.connect(sqlconfig).then(() => {
-        return sql.query(`select * from dbo.Clases c
-        INNER JOIN dbo.teacher t
+        return sql.query(`select c.class_Name, t.teacher_Name, t.profesion from dbo.Class c
+        INNER JOIN dbo.Teacher t
         ON  c.teacher_ID =  t.teacher_ID 
         where t.teacher_ID = ${teacher_ID}`);
     }).then(result => {
@@ -128,10 +128,10 @@ app.get('/app/v1/student', (req, res, next) =>{
 
     // Ejecuto la consulta a la base de datos
     sql.connect(sqlconfig).then(() => {
-        return sql.query(`select * from dbo.Student s
-        INNER JOIN dbo.enrollment e
+        return sql.query(`select s.student_Name, s.student_Picture, c.class_Name, t.teacher_Name from dbo.Student s
+        INNER JOIN dbo.Enrollment e
         ON  s.student_ID =  e.student_ID 
-        INNER JOIN dbo.Clases c
+        INNER JOIN dbo.Class c
         ON  c.class_ID =  e.class_ID 
         INNER JOIN dbo.Teacher t
         ON  t.teacher_ID =  c.teacher_ID 
@@ -158,15 +158,15 @@ app.post('/app/v1/record/student', (req, res, next) =>{
     var assistance_date = req.body.assistance_date;
     var assistance_checked = req.body.assistance_checked;
     var class_ID = req.body.class_ID;
+    var student_ID = req.body.student_ID;
 
     // Comprobamos que los datos se hayan enviado
     if(!assistance_date && !assistance_checked && !class_ID){
-        res.send("<h1>Sucedio un error con tus datos.</h1>");
+        res.send("<h1>Sucedio un error con tus datos.</h1>", assistance_date, assistance_checked, class_ID,student_ID);
     }
-
     // Ejecuto la consulta a la base de datos
     sql.connect(sqlconfig).then(() => {
-        return sql.query(`insert into dbo.Assistance(assistance_date,assistance_checked, class_ID) values('${assistance_date}', '${assistance_checked}',${class_ID});`);
+        return sql.query(`insert into dbo.Assistance(assistance_date,assistance_checked, class_ID, student_ID) values('${assistance_date}', '${assistance_checked}',${class_ID},${student_ID});`);
     }).then(result => {
         var data = {
             seccess: true,
@@ -185,24 +185,18 @@ app.post('/app/v1/record/student', (req, res, next) =>{
 //Creo funcion get para que el administrador puede crear nuevos estudiantes
 app.post('/app/v1/student/new', upload.single('file'), (req, res, next) =>{
     // Obtendre del querystring el parametro de busqueda del usuario y la imagen.
-    var code = req.body.code;
+    var student_Code = req.body.student_Code;
     var student_Name = req.body.student_Name;
-    var fileName = req.file != null ? req.file.fileName : 'n/a';
+    var student_picture = req.file != null ? req.file.student_picture : 'n/a';
 
-    // if (req.file == undefined) {
-    //     fileName = 'n/a';
-    //    } else {
-    //     fileName = req.file.filename;
-    // }
-
-    // Comprobamos que los datos se hayan enviado
-    if(!code && !student_Name){
-        res.send("<h1>Sucedio un error con tus datos.</h1> " +code + student_Name+fileName);
+     // Comprobamos que los datos se hayan enviado
+    if(!student_Code && !student_Name){
+        res.send("<h1>Sucedio un error con tus datos.</h1> ");
     }
 
     // Ejecuto la consulta a la base de datos
     sql.connect(sqlconfig).then(() => {
-        return sql.query(`insert into dbo.Student(code, student_name, student_picture) values(${code}, '${student_Name}', '${fileName}');`);
+        return sql.query(`insert into dbo.Student(student_Code, student_Name, student_picture) values(${student_Code}, '${student_Name}', '${student_picture}');`);
     }).then(result => {
         var data = {
             seccess: true,
